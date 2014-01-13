@@ -6,26 +6,16 @@ from email.MIMEText import MIMEText
 
 
 def secret_santa(names):
-    success = False
+    copy_names = names[:]
+    random.shuffle(copy_names)
+    assignments = {}
 
-    while not success:
-        current = names[:]
-        assignees = names[:]
-        assignments = dict()
-
-        for i in assignees:
-            index = random.randint(0,len(current)-1)
-            assignments[i] = current[index]
-            current= current[:index] + current[index+1:]
-        successes = []
-        for i in assignments:
-            if i != assignments[i]:
-                successes.append(True)
-            elif i == assignments[i]:
-                successes.append(False)
-            success = True
-            if False in successes:
-                success = False
+    # prevents cycles by randomly permuting list, and
+    # assigning each person the person to their right
+    for i in range(len(copy_names)):
+        giver = copy_names[i]
+        taker = copy_names[(i + 1) % len(copy_names)]
+        assignments[giver] = taker
     return assignments
 
 def string_to_list(string):
